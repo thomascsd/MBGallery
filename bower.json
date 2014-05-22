@@ -1,0 +1,30 @@
+{
+    "name": "MBGallery",
+    "version": "0.0.0",
+    "description": "Photo gallery",
+    "main": "index.html",
+    "keywords": [
+        "gallery",
+        "lightbox"
+    ],
+    "authors": [
+        "thomas"
+    ],
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "jquery": "1.10.x",
+        "backbone": "1.x",
+        "lodash": "2.4.1",
+        "handlebars": "1.x",
+        "bootstrap": "3.0.x",
+        "jquery.validation": "1.x",
+        "blueimp-gallery": ">=2.12.0"
+    }
+}
