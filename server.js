@@ -27,6 +27,7 @@ apiRouter.get('/photos/:folderID', routes.photo.getPhotos);
 apiRouter.post('/photos', routes.photo.upload);
 app.use('/api', apiRouter);
 
+//Default Route
 app.route('/')
 .get(routes.home.index);
 
