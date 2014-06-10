@@ -13,7 +13,7 @@ exports.index = function (req, res) {
 
         res.render('index', {
             title: '我的回憶',
-            album: albums
+            albums: albums
         });
     });
 

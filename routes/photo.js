@@ -3,10 +3,12 @@
  * 瀏覽及上傳照片至Google drive
  */
 
-var config = require('../config.json');
+var fs = require('fs');
+var path = require('path');
 var GoogleTokenProvider = require("refresh-token").GoogleTokenProvider;
 var async = require('async');
 var request = require('request');
+var config = require('../config.json');
 var accessToken;
 var endPoint = 'https://www.googleapis.com/drive/v2';
 var folderID = '';
@@ -91,6 +93,11 @@ module.exports = {
         var data;
 
         async.waterfall([
+            //先暫存至本機
+            function (callback) {
+
+
+            },
             //取得Token
             getToken,
             //上傳檔案

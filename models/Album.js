@@ -4,7 +4,7 @@
  */
 var mongoose = require('mongoose');
 var schema = new mongoose.Schema({
-    name: String,
+    title: String,
     password: String,
     creteDate: {type: Date, default: Date.now},
     count: Number,
