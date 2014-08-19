@@ -14,12 +14,57 @@ var endPoint = 'https://www.googleapis.com/drive/v2';
 var folderID = '';
 
 var getToken = function (callback) {
+    "use strict";
     var tokenProvider = new GoogleTokenProvider({
         'refresh_token': config.GoogleRefreshToken,
         'client_id': config.GoogleClientID,
         'client_secret': config.GoogleClientSecret
     });
     tokenProvider.getToken(callback);
+};
+
+var uploadFile = function (file, callback) {
+    "use strict";
+    var fstatus = fs.statSync(file.path);
+    fs.open(file.path, 'r', function (status, fileDescriptor) {
+        if (status) {
+            callback(status.message);
+            return;
+        }
+
+        var buffer = new Buffer(fstatus.size);
+        fs.read(fileDescriptor, buffer, 0, fstatus.size, 0, function (err, sum) {
+            request.post({
+                'url': 'https://www.googleapis.com/upload/drive/v2/files',
+                'qs': {
+                    'uploadType': 'multipart'
+                },
+                'headers': {
+                    'Authorization': 'Bearer ' + accessToken
+                },
+                'multipart':  [
+                    {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        'body': JSON.stringify({
+                            'title': file.name,
+                            'parents': [
+                                {
+                                    'id': folderID
+                                }
+                            ]
+                        })
+                    },
+                    {
+                        'Content-Type': 'image/png',
+                        'body': buffer
+                    }
+                ]
+
+            }, callback);
+
+        });
+
+    });
 };
 
 
@@ -77,29 +122,32 @@ module.exports = {
                             'title': body.title,
                             'md5Checksum': body.md5Checksum
                         });
-                    }
-                }, callback);
-            }
-        ], function (err, results) {
-            if (!err) {
-                //console.log(results);
-                res.json(results);
-            }
-        });
 
+                    }, callback);
+                });
+            }
+        ],
+            function (err, results) {
+                if (!err) {
+                    //console.log(results);
+                    res.json(results);
+                }
+            });
     },
     upload: function (req, res) {
+        "use strict";
         var folderID = req.body.folderID;
         var data;
 
         async.waterfall([
-            //先暫存至本機
-            function (callback) {
-
-
-            },
             //取得Token
             getToken,
+
+            //先暫存至本機
+            function (token, callback) {
+                accessToken = token;
+                async.each(req.files, uploadFile, callback);
+            },
             //上傳檔案
             function (token, callback) {
 
